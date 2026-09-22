@@ -1,0 +1,135 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "sw:mando_starfighter_projectile",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false,
+      "runtime_identifier": "minecraft:snowball"
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "projectile"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.1,
+        "height": 0.1
+      },
+      "minecraft:tick_world": {
+        "radius": 2
+      },
+      "minecraft:physics": {},
+      "minecraft:variant": {
+        "value": 0
+      },
+      "minecraft:mark_variant": {
+        "value": 0
+      },
+      "minecraft:skin_id": {
+        "value": 0
+      }
+    },
+    "component_groups": {
+      "removing": {
+        "minecraft:instant_despawn": {}
+      },
+      "explode": {
+        "minecraft:explode": {
+          "fuse_length": 0,
+          "fuse_lit": true,
+          "power": 0,
+          "fire_affected_by_griefing": true,
+          "destroy_affected_by_griefing": true
+        }
+      },
+      "projectile_off": {
+        "minecraft:projectile": {
+          "on_hit": {},
+          "power": 12,
+          "gravity": 0,
+          "liquid_inertia": 1.0,
+          "uncertaintyBase": 4,
+          "uncertaintyMultiplier": 0,
+          "anchor": 1
+        },
+        "minecraft:timer": {
+          "time": 0.0,
+          "looping": false,
+          "time_down_event": {
+            "event": "activate",
+            "target": "self"
+          }
+        }
+      },
+      "projectile_on": {
+        "minecraft:projectile": {
+          "on_hit": {
+            "impact_damage": {
+              "damage": 40,
+              "knockback": false
+            },
+            "definition_event": {
+              "affect_projectile": true,
+              "event_trigger": {
+                "event": "explode",
+                "target": "self"
+              }
+            }
+          },
+          "power": 2,
+          "gravity": 0,
+          "liquid_inertia": 1.0,
+          "uncertaintyBase": 4,
+          "uncertaintyMultiplier": 0,
+          "anchor": 1
+        },
+        "minecraft:timer": {
+          "time": 10,
+          "looping": false,
+          "time_down_event": {
+            "event": "removing",
+            "target": "self"
+          }
+        }
+      }
+    },
+    "events": {
+      "removing": {
+        "add": {
+          "component_groups": [
+            "removing"
+          ]
+        }
+      },
+      "minecraft:entity_spawned": {
+        "add": {
+          "component_groups": [
+            "projectile_off"
+          ]
+        }
+      },
+      "activate": {
+        "add": {
+          "component_groups": [
+            "projectile_on"
+          ]
+        },
+        "remove": {
+          "component_groups": [
+            "projectile_off"
+          ]
+        }
+      },
+      "explode": {
+        "add": {
+          "component_groups": [
+            "explode"
+          ]
+        }
+      }
+    }
+  }
+}
